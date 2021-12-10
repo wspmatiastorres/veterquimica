@@ -1,0 +1,39 @@
+version: '3.1'
+services:
+  ignition:
+    image: kcollins/ignition:8.1.11  # You can change `latest` to a specific version, e.g. `8.0.5`
+    restart: unless-stopped
+    container_name: ignition-vet-container
+    ports:
+      - 8088:8088
+    volumes:
+      # - ./gateway_backup.gwbk:/restore.gwbk
+      - ignition_veterquimica_data:/var/lib/ignition/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    environment:
+        GATEWAY_ADMIN_USERNAME: admin
+        GATEWAY_ADMIN_PASSWORD: Delvalle534!
+        GATEWAY_SYSTEM_NAME: ignition-lab
+        IGNITION_EDITION: FULL
+
+  db:
+    image: mysql:5.7.36
+    restart: unless-stopped
+    container_name: mysql-vet-container
+    ports:
+      - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./db/datadir:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Delvalle534!
+      MYSQL_DATABASE: main_minerales
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: Delvalle534!
+
+volumes:
+  ignition_veterquimica_data:
